@@ -504,6 +504,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Function to generate share URLs for an activity
+  function generateShareUrls(name, details) {
+    const formattedSchedule = formatSchedule(details);
+    const activityUrl = window.location.href;
+    const shareText = `Check out ${name} at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(activityUrl);
+    const encodedName = encodeURIComponent(name);
+
+    return {
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      email: `mailto:?subject=${encodedName} - Mergington High School&body=${encodedText}%0A%0A${encodedUrl}`
+    };
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -530,6 +547,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+
+    // Generate share URLs
+    const shareUrls = generateShareUrls(name, details);
 
     // Create activity tag
     const tagHtml = `
@@ -583,6 +603,25 @@ document.addEventListener("DOMContentLoaded", () => {
             )
             .join("")}
         </ul>
+      </div>
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <a href="${shareUrls.twitter}" target="_blank" rel="noopener noreferrer" class="share-button share-twitter tooltip" aria-label="Share on Twitter">
+          <span class="share-icon">𝕏</span>
+          <span class="tooltip-text">Share on Twitter</span>
+        </a>
+        <a href="${shareUrls.facebook}" target="_blank" rel="noopener noreferrer" class="share-button share-facebook tooltip" aria-label="Share on Facebook">
+          <span class="share-icon">f</span>
+          <span class="tooltip-text">Share on Facebook</span>
+        </a>
+        <a href="${shareUrls.linkedin}" target="_blank" rel="noopener noreferrer" class="share-button share-linkedin tooltip" aria-label="Share on LinkedIn">
+          <span class="share-icon">in</span>
+          <span class="tooltip-text">Share on LinkedIn</span>
+        </a>
+        <a href="${shareUrls.email}" class="share-button share-email tooltip" aria-label="Share via Email">
+          <span class="share-icon">✉</span>
+          <span class="tooltip-text">Share via Email</span>
+        </a>
       </div>
       <div class="activity-card-actions">
         ${
